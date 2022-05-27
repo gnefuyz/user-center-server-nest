@@ -22,7 +22,11 @@ export class TransformInterceptor<T>
   ): Observable<Response<T>> {
     return next.handle().pipe(
       map((data) => {
-        if ('data' in data && ('message' in data || 'code' in data)) {
+        if (
+          typeof data === 'object' &&
+          'data' in data &&
+          ('message' in data || 'code' in data)
+        ) {
           return {
             code: data['code'] || 0,
             data: data['data'],

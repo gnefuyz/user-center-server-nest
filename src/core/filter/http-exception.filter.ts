@@ -12,6 +12,7 @@ function getExceptionMessage(exception: HttpException): string {
     const response = exception.getResponse();
     if (typeof response === 'object') {
       // handle SwaggerException
+      console.log(response);
       if ('message' in response) {
         if (response['message'] instanceof Array) {
           message = response['message'].pop();
@@ -51,6 +52,7 @@ export class ErrorExceptionFilter implements ExceptionFilter {
   catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp(); // 获取请求上下文
     const response = ctx.getResponse(); // 获取请求上下文中的 response 对象
+    console.log(exception);
     const errorResponse = {
       data: null,
       message: exception.message,

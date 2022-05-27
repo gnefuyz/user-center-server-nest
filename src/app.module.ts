@@ -1,8 +1,12 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import envConfig from '../config/env';
 import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { AppController } from './app.controller';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -26,7 +30,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         synchronize: configService.get('DB_SYNCHRONIZE', false),
       }),
     }),
+    CacheModule.register(),
+    AuthModule,
     UserModule,
   ],
+  controllers: [AppController],
+  providers: [{ provide: APP_GUARD, useClass: JwtAuthGuard }],
 })
 export class AppModule {}
